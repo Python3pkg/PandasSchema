@@ -9,13 +9,13 @@ import operator
 from . import column
 from .validation_warning import ValidationWarning
 from .errors import PanSchArgumentError
+import collections
 
 
-class _BaseValidation:
+class _BaseValidation(metaclass=abc.ABCMeta):
     """
     The validation base class that defines any object that can create a list of errors from a Series
     """
-    __metaclass__ = abc.ABCMeta
 
     @abc.abstractmethod
     def get_errors(self, series: pd.Series, column: 'column.Column') -> typing.Iterable[ValidationWarning]:
@@ -27,12 +27,11 @@ class _BaseValidation:
         """
 
 
-class _SeriesValidation(_BaseValidation):
+class _SeriesValidation(_BaseValidation, metaclass=abc.ABCMeta):
     """
     Implements the _BaseValidation interface by returning a Boolean series for each element that either passes or
     fails the validation
     """
-    __metaclass__ = abc.ABCMeta
 
     def __init__(self, **kwargs):
         self._custom_message = kwargs.get('message')
@@ -239,7 +238,7 @@ class CanCallValidation(_SeriesValidation):
         :param func: A python function that will be called with the value of each cell in the DataFrame. If this
             function throws an error, this cell is considered to have failed the validation. Otherwise it has passed.
         """
-        if callable(type):
+        if isinstance(type, collections.Callable):
             self.callable = func
         else:
             raise PanSchArgumentError('The object "{}" passed to CanCallValidation is not callable!'.format(type))

@@ -50,8 +50,8 @@ class Schema:
         # We associate the column objects in the schema with data frame series either by name or by position, depending
         # on the value of self.ordered
         if self.ordered:
-            series = [x[1] for x in df.iteritems()]
-            column_pairs = zip(series, self.columns)
+            series = [x[1] for x in df.items()]
+            column_pairs = list(zip(series, self.columns))
         else:
             column_pairs = []
             for column in self.columns:

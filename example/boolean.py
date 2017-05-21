@@ -25,4 +25,4 @@ test_data = pd.DataFrame({
 errors = schema.validate(test_data)
 
 for error in errors:
-    print('"{}" failed!'.format(error.value))
+    print(('"{}" failed!'.format(error.value)))
